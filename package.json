@@ -1,0 +1,27 @@
+{
+  "name": "snapshot-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BalenD/snapshot-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BalenD/snapshot-project/issues"
+  },
+  "homepage": "https://github.com/BalenD/snapshot-project#readme",
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  },
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
