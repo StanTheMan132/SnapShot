@@ -1,7 +1,26 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
+const passport = require('passport');
+const config = require('./config/database');
+const User = require('./app/models/user');ß
+const jwt = require('jwt-simple');
+const port = process.env.PORT;
 
 const app = express();
 
+//req paramaters
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+//Log
+app.use(morgan('dev'));
+
+//use passport.js
+app.use(passport.initialize());
+
+//Routes
 app.get('/', (req, res) => {
   res.status(200).send('GOOD LUCK MY FRIENDS AND LETS GET THIS GOING');
 });
