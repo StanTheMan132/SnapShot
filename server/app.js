@@ -13,8 +13,7 @@ app.use(bodyParser.json());
 //Log
 app.use(morgan('dev'));
 
-//use passport.js
-app.use(passport.initialize());
+
 
 //Routesx
 app.get('/', (req, res) => {
