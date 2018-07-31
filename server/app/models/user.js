@@ -5,7 +5,6 @@ var bcrypt = require('bcypt');
 //https://blog.matoski.com/article/jwt-express-node-mongoose
 
 //Mongoose Schema
-
 var UserSchema = newSchema({
     userName: {type:String, required: true},
     password: {type:String, required: true}
@@ -33,6 +32,7 @@ UserSchema.pre('save', function(next){
     }
 });
 
+//compare the user password to the hashed password
 UserSchema.methods.comparePasswords = function(passw, cb) {
     bcrypt.compare(passw, this.password, function(err, isMatch){
         if(err){
@@ -43,4 +43,5 @@ UserSchema.methods.comparePasswords = function(passw, cb) {
     });
 };
 
-module.exports = mongoose.model('User', UserSchema)
+//export the UserSchema so it can be used in different files
+module.exports = mongoose.model('User', UserSchema);
