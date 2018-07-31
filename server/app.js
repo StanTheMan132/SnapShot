@@ -1,11 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const mongoose = require('mongoose');
-const passport = require('passport');
-const config = require('./config/database');
-const User = require('./api/auth/userModel');
-const jwt = require('jwt-simple');
+const api = require("./api/api")
 const port = process.env.PORT;
 
 const app = express();
@@ -25,11 +21,7 @@ app.get('/', (req, res) => {
   res.status(200).send('GOOD LUCK MY FRIENDS AND LETS GET THIS GOING');
 });
 
-
-
-
-
-
+app.use("/api", api);
 
 
 

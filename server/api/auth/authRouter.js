@@ -6,9 +6,9 @@ mongoose.connect(config.database)
 
 require('../config/passport')(passport);
 
-var apiRoutes = express.Router();
+var authRoutes = express.Router();
 
-apiRoutes.post('/signup', function(req, res){
+authRoutes.post('/signup', function(req, res){
     console.log(req.body.username);
     console.log(req.body.password);
     if(!req.body.username || !req.body.password){
@@ -29,4 +29,4 @@ apiRoutes.post('/signup', function(req, res){
   });
 
 
-app.use("/api", apiRoutes)
+module.exports = authRoutes;
