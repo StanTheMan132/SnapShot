@@ -1,11 +1,11 @@
-var mongoose = require('mongose');
+var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var bcrypt = require('bcypt');
+var bcrypt = require('bcrypt');
 
 //https://blog.matoski.com/article/jwt-express-node-mongoose
 
 //Mongoose Schema
-var UserSchema = newSchema({
+var UserSchema = new Schema({
     userName: {type:String, required: true},
     password: {type:String, required: true}
 });
