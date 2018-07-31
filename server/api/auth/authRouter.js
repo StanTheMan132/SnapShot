@@ -1,22 +1,20 @@
 const mongoose = require('mongoose');
-const User = require('./userModel');
+const express = require('express');
+const passport = require('passport');
 const config = require('../../config/database');
-const checkAuth = require("./authController");
-const passport = require("passport");
+const checkAuth = require('./authController');
 
+const authRoutes = express.Router();
 
-mongoose.connect(config.database)
+mongoose.connect(config.database);
 
 require('../../config/passport')(passport);
 
 
-
-var authRoutes = require("express").Router();
-
-//use passport.js
+//  use passport.js
 authRoutes.use(passport.initialize());
 
-authRoutes.route('/signup', checkAuth);
+authRoutes.post('/signup', (req, res) => { checkAuth(req, res); });
 
 
 module.exports = authRoutes;
