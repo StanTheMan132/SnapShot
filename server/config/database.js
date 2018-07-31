@@ -1,4 +1,4 @@
 module.exports = {
-    'secret': 'InsertSecretHere',
+    'secret': process.env.DB_SECRET,
     'database': 'mongodb://localhost/snapshot_auth'
 }
