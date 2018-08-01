@@ -26,7 +26,6 @@ const authUser = function authUser(req, res) {
     username: req.body.username,
   }, (err, user) => {
     if (err) throw err;
-    console.log(req.body.username);
     if (!user) {
       res.status(403).send({ success: false, msg: 'Auth Failed User Not Found' });
     } else {
