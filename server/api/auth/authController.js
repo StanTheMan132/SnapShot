@@ -1,15 +1,17 @@
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
 const User = require('./userModel');
 const config = require('../../config/config');
 
 exports.addUser = function addUser(req, res) {
   if (!req.body.username || !req.body.password) {
+    console.log(req.body);
     res.json({ success: false, msg: 'No name/password found' });
   } else {
     const newUser = new User({
       username: req.body.username,
       password: req.body.password,
+      email: req.body.email,
+      permissions: 'read',
     });
     newUser.save((err) => {
       if (err) {
@@ -32,9 +34,8 @@ exports.authUser = function authUser(req, res) {
       user.comparePasswords(req.body.password, (err, isMatch) => {
         if (isMatch && !err) {
           const payload = {
-            username: user.username,
-            cleared: true,
-          }
+            id: user._id,
+          };
           const token = jwt.sign(payload, config.jwt.secret);
 
           res.json({ success: true, token: token });
