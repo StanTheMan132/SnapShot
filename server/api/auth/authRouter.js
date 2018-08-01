@@ -1,17 +1,11 @@
-const mongoose = require('mongoose');
 const express = require('express');
 const passport = require('passport');
-const config = require('../../config/database');
 const auth = require('./authController');
 
-const addUser = auth.addUser;
-const authUser = auth.authUser;
+const { addUser } = auth;
+const { authUser } = auth;
 
 const authRoutes = express.Router();
-
-mongoose.connect(config.database);
-
-require('../../config/passport')(passport);
 
 
 //  use passport.js

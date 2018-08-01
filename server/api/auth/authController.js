@@ -1,7 +1,12 @@
 const jwt = require('jwt-simple');
+const mongoose = require('mongoose');
+const passport = require('passport');
 const User = require('./userModel');
 const config = require('../../config/database');
 
+mongoose.connect(config.database);
+
+require('../../config/passport')(passport);
 
 const addUser = function addUser(req, res) {
   if (!req.body.username || !req.body.password) {
