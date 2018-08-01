@@ -1,4 +1,4 @@
-const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const User = require('./userModel');
 const config = require('../../config/config');
@@ -31,9 +31,13 @@ exports.authUser = function authUser(req, res) {
     } else {
       user.comparePasswords(req.body.password, (err, isMatch) => {
         if (isMatch && !err) {
-          const token = jwt.encode(user, config.jwt.secret);
+          const payload = {
+            username: user.username,
+            cleared: true,
+          }
+          const token = jwt.sign(payload, config.jwt.secret);
 
-          res.json({ success: true, token: `JWT ${token}` });
+          res.json({ success: true, token: token });
         } else {
           res.status(403).send({ success: false, msg: 'Auth Failed Wrong Password' });
         }
