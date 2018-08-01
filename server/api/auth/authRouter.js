@@ -2,22 +2,17 @@ const express = require('express');
 const passport = require('passport');
 const auth = require('./authController');
 
-const { addUser } = auth;
-const { authUser } = auth;
-const { newPassword } = auth;
-
 const authRoutes = express.Router();
 
-
-//  use passport.js
-//  authRoutes.use(passport.initialize());
-
 //  routes
-authRoutes.post('/signup', (req, res) => { addUser(req, res); });
+authRoutes.route('/signup')
+  .post(auth.addUser);
 
-authRoutes.post('/login', (req, res) => { authUser(req, res); });
+authRoutes.route('/login')
+  .post(auth.authUser);
 
-authRoutes.post('/forgotpassword', (req, res) => { newPassword(req, res); });
+authRoutes.route('/forgotpassword')
+  .post(auth.newPassword);
 
 
 module.exports = authRoutes;

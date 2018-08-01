@@ -1,14 +1,9 @@
 const jwt = require('jwt-simple');
-const mongoose = require('mongoose');
 const passport = require('passport');
 const User = require('./userModel');
-const config = require('../../config/database');
+const config = require('../../config/config');
 
-mongoose.connect(config.database);
-
-require('../../config/passport')(passport);
-
-const addUser = function addUser(req, res) {
+exports.addUser = function addUser(req, res) {
   if (!req.body.username || !req.body.password) {
     res.json({ success: false, msg: 'No name/password found' });
   } else {
@@ -26,7 +21,7 @@ const addUser = function addUser(req, res) {
   }
 }
 
-const authUser = function authUser(req, res) {
+exports.authUser = function authUser(req, res) {
   User.findOne({
     username: req.body.username,
   }, (err, user) => {
@@ -36,7 +31,7 @@ const authUser = function authUser(req, res) {
     } else {
       user.comparePasswords(req.body.password, (err, isMatch) => {
         if (isMatch && !err) {
-          const token = jwt.encode(user, config.secret);
+          const token = jwt.encode(user, config.jwt.secret);
 
           res.json({ success: true, token: `JWT ${token}` });
         } else {
@@ -47,7 +42,7 @@ const authUser = function authUser(req, res) {
   });
 };
 
-const updatePassword = function updatePassword(req, res) {
+exports.newPassword = function updatePassword(req, res) {
   User.findOne({
     username: req.body.username,
   }, (err, user) => {
@@ -68,8 +63,3 @@ const updatePassword = function updatePassword(req, res) {
     }
   });
 };
-
-
-module.exports.addUser = addUser;
-module.exports.authUser = authUser;
-module.exports.newPassword = updatePassword;

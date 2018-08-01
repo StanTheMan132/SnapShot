@@ -11,8 +11,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
 });
 
-//  hash the password AKA make it unreadable
-
+//  hash and salt the password before saving
 UserSchema.pre('save', function saveSchema(next) {
   const user = this;
   if (this.isModified('password') || this.isNew) {

@@ -1,32 +1,28 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
+const setupMiddleware = require('./middleware/appMiddleware');
+const startDatabase = require('./database');
+const errorHandler = require('./utils/errorHandler');
 const api = require('./api/api');
-
 
 const app = express();
 
-//  req paramaters
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-//  Log
-app.use(morgan('dev'));
-
+//  will attach/setup body-parser and morgan
+setupMiddleware(app);
+//  starts the database
+startDatabase();
 
 
 //  Routes
-
 app.use('/api', api);
 
-app.get('/', (req, res) => {
-  res.status(200).send('GOOD LUCK MY FRIENDS AND LETS GET THIS GOING');
-});
-
-
-
 app.use((req, res, next) => {
-  res.status(404).send('route doesnt exist yet m8');
+  res.status(404).json({
+    status: 404,
+    message: 'Resource not found',
+  });
 });
+
+//  global express error handler
+app.use(errorHandler());
 
 module.exports = app;
