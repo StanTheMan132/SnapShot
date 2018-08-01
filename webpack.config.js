@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  context: __dirname,
   entry: { main: './app/src/index.js' },
   mode: 'development',
   module: {
@@ -29,10 +30,17 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './app/',
     open: true,
-    // contentBase: path.join(__dirname, 'app/'),
-    port: 8000,
-    publicPath: 'http://localhost:8000/app/',
+    contentBase: path.join(__dirname, 'app/dist'),
+    port: 8000
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      alwaysWriteToDisk: true,
+      filename: 'index.html',
+      template: './app/index.html',
+      inject: true,
+    }),
+    new HtmlWebpackHarddiskPlugin(),
+  ],
 };
