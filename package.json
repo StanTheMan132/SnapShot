@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./server.js"
+    "start": "nodemon ./server.js",
+    "build-react": "webpack --mode development",
+    "start-react": "webpack-dev-server --mode development --open --port 8000"
   },
   "repository": {
     "type": "git",
@@ -19,19 +21,35 @@
   },
   "homepage": "https://github.com/BalenD/snapshot-project#readme",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "chai": "^4.1.2",
+    "css-loader": "^0.28.11",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-react": "^7.10.0",
     "faker": "^4.1.0",
+    "html-webpack-harddisk-plugin": "^0.2.0",
+    "html-webpack-plugin": "^3.2.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.3",
-    "sinon": "^6.1.4"
+    "sinon": "^6.1.4",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
-    "mongoose": "^5.2.5"
+    "mongoose": "^5.2.5",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
   }
 }
