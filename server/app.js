@@ -11,7 +11,6 @@ setupMiddleware(app);
 //  starts the database
 startDatabase();
 
-
 //  Routes
 app.use('/api', api);
 
