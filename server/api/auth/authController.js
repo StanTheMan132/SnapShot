@@ -1,7 +1,12 @@
 const jwt = require('jwt-simple');
+const mongoose = require('mongoose');
+const passport = require('passport');
 const User = require('./userModel');
 const config = require('../../config/database');
 
+mongoose.connect(config.database);
+
+require('../../config/passport')(passport);
 
 const addUser = function addUser(req, res) {
   if (!req.body.username || !req.body.password) {
@@ -26,7 +31,6 @@ const authUser = function authUser(req, res) {
     username: req.body.username,
   }, (err, user) => {
     if (err) throw err;
-    console.log(req.body.username);
     if (!user) {
       res.status(403).send({ success: false, msg: 'Auth Failed User Not Found' });
     } else {
@@ -43,6 +47,29 @@ const authUser = function authUser(req, res) {
   });
 };
 
+const updatePassword = function updatePassword(req, res) {
+  User.findOne({
+    username: req.body.username,
+  }, (err, user) => {
+    if (err) {
+      res.json({ success: false, msg: err });
+    }
+    if (!user) {
+      res.status(403).send({ success: false, msg: 'User not found' });
+    } else {
+      user.set({ password: req.body.password });
+      user.save((err) => {
+        if (err) {
+          res.json({ msg: err });
+        } else {
+          res.json({ success: true, msg: 'Password Changed' });
+        }
+      });
+    }
+  });
+};
+
 
 module.exports.addUser = addUser;
 module.exports.authUser = authUser;
+module.exports.newPassword = updatePassword;
