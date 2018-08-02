@@ -37,7 +37,7 @@ exports.authUser = function authUser(req, res) {
             id: user._id,
           };
           const token = jwt.sign(payload, config.jwt.secret, {
-            expiresInMinutes: 30,
+            expiresIn: 30 * 60,
           });
 
           res.json({ success: true, token: token });
@@ -103,5 +103,5 @@ exports.deleteUser = function deleteUser(req, res) {
 };
 
 exports.getUser = function getUser(req, res) {
-
+  res.json({ success: true });
 };

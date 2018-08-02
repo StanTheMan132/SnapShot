@@ -1,5 +1,6 @@
 const express = require('express');
 const auth = require('./authController');
+const authMiddelware = require('../../middleware/authMiddelware/authMiddelware');
 
 const authRoutes = express.Router();
 
@@ -12,6 +13,8 @@ authRoutes.route('/login')
 
 authRoutes.route('/forgotpassword')
   .post(auth.newPassword);
+
+authRoutes.use(authMiddelware);
 
 authRoutes.route('/me')
   .delete(auth.deleteUser)
