@@ -36,7 +36,9 @@ exports.authUser = function authUser(req, res) {
           const payload = {
             id: user._id,
           };
-          const token = jwt.sign(payload, config.jwt.secret);
+          const token = jwt.sign(payload, config.jwt.secret, {
+            expiresInMinutes: 30,
+          });
 
           res.json({ success: true, token: token });
         } else {
@@ -67,4 +69,39 @@ exports.newPassword = function updatePassword(req, res) {
       });
     }
   });
+};
+
+
+exports.deleteUser = function deleteUser(req, res) {
+  User.findOne({
+    username: req.body.username,
+  }, (err, user) => {
+    if (err) {
+      res.json({ success: false, msg: err });
+    }
+
+    if (!user) {
+      res.status(403).send({ success: false, msg: 'User not Found' });
+    } else {
+
+      user.comparePasswords(req.body.password, (err, isMatch) => {
+        ;
+        if (isMatch && !err) {
+          User.findByIdAndRemove(user._id, (err, user) => {
+            if (err) {
+              res.json({ success: false, msg: err });
+            } else {
+              res.json({ success: true, msg: `User ${user.username} deleted` });
+            }
+          });  
+        } else {
+          res.json({ success: false, msg: `Could not authenticate password err: ${err}` });
+        }
+      });
+    }
+  });
+};
+
+exports.getUser = function getUser(req, res) {
+
 };

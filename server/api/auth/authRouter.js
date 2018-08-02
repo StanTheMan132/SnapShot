@@ -13,5 +13,9 @@ authRoutes.route('/login')
 authRoutes.route('/forgotpassword')
   .post(auth.newPassword);
 
+authRoutes.route('/me')
+  .delete(auth.deleteUser)
+  .get(auth.getUser);
+
 
 module.exports = authRoutes;
