@@ -2,21 +2,6 @@ const jwt = require('jsonwebtoken');
 const User = require('./userModel');
 const config = require('../../config/config');
 
-let userObject = '';
-
-function findUser(id) {
-  return new Promise((resolve, reject) => {
-    User.findById(id, (err, user) => {
-      if (!err) {
-        userObject = user;
-        resolve();
-      } else {
-        reject(err);
-      }
-    });
-  });
-}
-
 
 exports.addUser = function addUser(req, res) {
   if (!req.body.username || !req.body.password) {
@@ -117,10 +102,15 @@ exports.deleteUser = function deleteUser(req, res) {
   });
 };
 
-
-exports.getUserData = function getUserData(req, res) {
-  findUser(req.user.id).then(() => {
-    res.json({ success: true, username: userObject.username, email: userObject.email });
-  })
-    .catch(err => res.json({ success: false, msg: err }));
+exports.getUserData = async function getUserData(req, res, next) {
+  try {
+    const foundUser = await User.findById(req.user.id);
+    if (foundUser) {
+      res.status(200).json({ succes: true, username: foundUser.username, email: foundUser.email });
+    } else {
+      res.status(204).json({});
+    }
+  } catch (error) {
+    next(error);
+  }
 };
