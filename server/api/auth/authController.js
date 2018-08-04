@@ -5,7 +5,7 @@ const config = require('../../config/config');
 let userObject = '';
 
 function findUser(id) {
-  return new Promise((resolve, reject) => { 
+  return new Promise((resolve, reject) => {
     User.findById(id, (err, user) => {
       if (!err) {
         userObject = user;
@@ -123,5 +123,5 @@ exports.getUserData = function getUserData(req, res) {
   findUser(req.user.id).then(() => {
     res.json({ success: true, username: userObject.username, email: userObject.email });
   })
-    .catch(err => console.log(err));
+    .catch(err => res.json({ success: false, msg: err }));
 };
