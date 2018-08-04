@@ -118,7 +118,6 @@ exports.deleteUser = function deleteUser(req, res) {
 };
 
 
-
 exports.getUserData = function getUserData(req, res) {
   findUser(req.user.id).then(() => {
     res.json({ success: true, username: userObject.username, email: userObject.email });
