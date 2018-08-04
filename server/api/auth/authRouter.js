@@ -18,7 +18,7 @@ authRoutes.use(authMiddelware);
 
 authRoutes.route('/me')
   .delete(auth.deleteUser)
-  .get(auth.getUser);
+  .get(auth.getUserData);
 
 
 module.exports = authRoutes;

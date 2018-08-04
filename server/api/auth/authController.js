@@ -2,9 +2,24 @@ const jwt = require('jsonwebtoken');
 const User = require('./userModel');
 const config = require('../../config/config');
 
+let userObject = '';
+
+function findUser(id) {
+  return new Promise((resolve, reject) => { 
+    User.findById(id, (err, user) => {
+      if (!err) {
+        userObject = user;
+        resolve();
+      } else {
+        reject(err);
+      }
+    });
+  });
+}
+
+
 exports.addUser = function addUser(req, res) {
   if (!req.body.username || !req.body.password) {
-    console.log(req.body);
     res.json({ success: false, msg: 'No name/password found' });
   } else {
     const newUser = new User({
@@ -21,7 +36,7 @@ exports.addUser = function addUser(req, res) {
       }
     });
   }
-}
+};
 
 exports.authUser = function authUser(req, res) {
   User.findOne({
@@ -102,6 +117,11 @@ exports.deleteUser = function deleteUser(req, res) {
   });
 };
 
-exports.getUser = function getUser(req, res) {
-  res.json({ success: true });
+
+
+exports.getUserData = function getUserData(req, res) {
+  findUser(req.user.id).then(() => {
+    res.json({ success: true, username: userObject.username, email: userObject.email });
+  })
+    .catch(err => console.log(err));
 };
