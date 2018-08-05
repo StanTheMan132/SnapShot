@@ -17,7 +17,7 @@ exports.addUser = function addUser(req, res) {
       if (err) {
         res.json({ success: false, msg: `Something goofed: ${err}` });
       } else {
-        res.json({ success: true, msg: 'Created New User' });
+        res.status(201).json({ success: true, msg: 'Created New User' });
       }
     });
   }
@@ -112,5 +112,16 @@ exports.getUserData = async function getUserData(req, res, next) {
     }
   } catch (error) {
     next(error);
+  }
+};
+
+exports.patchUser = async function patchUser(req, res) {
+  try {
+    const updatedObject = req.body;
+    const { id } = req.user;
+    await User.update({ _id: id }, { $set: updatedObject });
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).json({ succes: false });
   }
 };
