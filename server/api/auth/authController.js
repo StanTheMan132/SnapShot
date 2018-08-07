@@ -24,8 +24,10 @@ exports.addUser = async function addUser(req, res) {
 
 exports.authUser = async function authUser(req, res) {
   try {
+    console.log('hello comrad');
     const foundUser = await User.findOne({ username: req.body.username });
-    const matching = await foundUser.comparePasswords(req.body.password);
+    const matching = await foundUser.authenticate(req.body.password);
+    console.log(matching);
     if (matching) {
       const payload = {
         id: foundUser._id,
@@ -36,7 +38,7 @@ exports.authUser = async function authUser(req, res) {
       res.json({ success: true, token: token });
     }
   } catch (err) {
-    res.status.send({ success: false, msg: err });
+    res.status(500).send({ success: false, msg: err });
   }
 };
 
