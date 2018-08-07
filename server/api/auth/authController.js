@@ -25,17 +25,16 @@ exports.addUser = async function addUser(req, res) {
 exports.authUser = async function authUser(req, res) {
   try {
     const foundUser = await User.findOne({ username: req.body.username });
-    foundUser.comparePasswords(req.body.password, (err, isMatch) => {
-      if (isMatch && !err) {
-        const payload = {
-          id: foundUser._id,
-        };
-        const token = jwt.sign(payload, config.jwt.secret, {
-          expiresIn: 30 * 60,
-        });    
-        res.json({ success: true, token: token });
-      }
-    });
+    const matching = await foundUser.comparePasswords(req.body.password);
+    if (matching) {
+      const payload = {
+        id: foundUser._id,
+      };
+      const token = jwt.sign(payload, config.jwt.secret, {
+        expiresIn: 30 * 60,
+      });
+      res.json({ success: true, token: token });
+    }
   } catch (err) {
     res.status.send({ success: false, msg: err });
   }
@@ -54,57 +53,19 @@ exports.newPassword = async function updatePassword(req, res) {
 };
 
 
-exports.deleteUser = function deleteUser(req, res) {
-  User.findOne({
-    username: req.body.username,
-  }, (err, user) => {
-    if (err) {
-      res.json({ success: false, msg: err });
+exports.deleteUser = async function deleteUser(req, res) {
+  try {
+    const foundUser = await User.findOne({ username: req.body.username });
+    const matchingPasswords = await foundUser.authenticate(req.body.password);
+    if (matchingPasswords) {
+      await User.findByIdAndRemove(foundUser._id);
+      res.json({ success: true, msg: `User ${foundUser.username} deleted` })
     }
-
-    if (!user) {
-      res.status(403).send({ success: false, msg: 'User not Found' });
-    } else {
-
-      user.comparePasswords(req.body.password, (err, isMatch) => {
-        ;
-        if (isMatch && !err) {
-          User.findByIdAndRemove(user._id, (err, user) => {
-            if (err) {
-              res.json({ success: false, msg: err });
-            } else {
-              res.json({ success: true, msg: `User ${user.username} deleted` });
-            }
-          });  
-        } else {
-          res.json({ success: false, msg: `Could not authenticate password err: ${err}` });
-        }
-      });
-    }
-  });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ success: false, msg: err });
+  }
 };
-
-
-
-// exports.deleteUser = async function deleteUser(req, res) {
-//   try {
-//     const foundUser = await User.findOne({ username: req.body.username });
-//     foundUser.comparePasswords(req.body.password, (err, isMatch) => {
-//       if (isMatch && err) {
-//         foundUser.findByIdAndRemove(foundUser._id, (err, user) => {
-//           if (err) {
-//             res.json({ success: false, msg: err });
-//           } else {
-//             res.json({ success: true, msg: `User ${user.username} deleted` });
-//           }
-//         });  
-//       }
-//     });
-    
-//   } catch (err) {
-//     res.status(500).send({ success: false, msg: err });
-//   }
-// };
 
 exports.getUserData = async function getUserData(req, res, next) {
   try {
