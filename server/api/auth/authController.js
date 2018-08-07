@@ -3,7 +3,7 @@ const User = require('./userModel');
 const config = require('../../config/config');
 
 
-exports.addUser = function addUser(req, res) {
+exports.addUser = async function addUser(req, res) {
   if (!req.body.username || !req.body.password) {
     res.json({ success: false, msg: 'No name/password found' });
   } else {
@@ -13,62 +13,44 @@ exports.addUser = function addUser(req, res) {
       email: req.body.email,
       permissions: 'read',
     });
-    newUser.save((err) => {
-      if (err) {
-        res.json({ success: false, msg: `Something goofed: ${err}` });
-      } else {
-        res.status(201).json({ success: true, msg: 'Created New User' });
-      }
-    });
+    try {
+      await newUser.save();
+      res.status(201).json({ success: true, msg: 'Created New User' });
+    } catch (err) {
+      res.json({ success: false, msg: `Something goofed: ${err}` });
+    }
   }
 };
 
-exports.authUser = function authUser(req, res) {
-  User.findOne({
-    username: req.body.username,
-  }, (err, user) => {
-    if (err) throw err;
-    if (!user) {
-      res.status(403).send({ success: false, msg: 'Auth Failed User Not Found' });
-    } else {
-      user.comparePasswords(req.body.password, (err, isMatch) => {
-        if (isMatch && !err) {
-          const payload = {
-            id: user._id,
-          };
-          const token = jwt.sign(payload, config.jwt.secret, {
-            expiresIn: 30 * 60,
-          });
-
-          res.json({ success: true, token: token });
-        } else {
-          res.status(403).send({ success: false, msg: 'Auth Failed Wrong Password' });
-        }
-      });
-    }
-  });
+exports.authUser = async function authUser(req, res) {
+  try {
+    const foundUser = await User.findOne({ username: req.body.username });
+    foundUser.comparePasswords(req.body.password, (err, isMatch) => {
+      if (isMatch && !err) {
+        const payload = {
+          id: foundUser._id,
+        };
+        const token = jwt.sign(payload, config.jwt.secret, {
+          expiresIn: 30 * 60,
+        });    
+        res.json({ success: true, token: token });
+      }
+    });
+  } catch (err) {
+    res.status.send({ success: false, msg: err });
+  }
 };
 
-exports.newPassword = function updatePassword(req, res) {
-  User.findOne({
-    username: req.body.username,
-  }, (err, user) => {
-    if (err) {
-      res.json({ success: false, msg: err });
-    }
-    if (!user) {
-      res.status(403).send({ success: false, msg: 'User not found' });
-    } else {
-      user.set({ password: req.body.password });
-      user.save((err) => {
-        if (err) {
-          res.json({ msg: err });
-        } else {
-          res.json({ success: true, msg: 'Password Changed' });
-        }
-      });
-    }
-  });
+
+exports.newPassword = async function updatePassword(req, res) {
+  try {
+    const foundUser = await User.findOne({ username: req.body.username });
+    foundUser.set({ password: req.body.password });
+    foundUser.save();
+    res.send({ success: true, msg: 'Password Changed' });
+  } catch (err) {
+    res.status(500).send({ success: true, msg: err });
+  }
 };
 
 
@@ -101,6 +83,28 @@ exports.deleteUser = function deleteUser(req, res) {
     }
   });
 };
+
+
+
+// exports.deleteUser = async function deleteUser(req, res) {
+//   try {
+//     const foundUser = await User.findOne({ username: req.body.username });
+//     foundUser.comparePasswords(req.body.password, (err, isMatch) => {
+//       if (isMatch && err) {
+//         foundUser.findByIdAndRemove(foundUser._id, (err, user) => {
+//           if (err) {
+//             res.json({ success: false, msg: err });
+//           } else {
+//             res.json({ success: true, msg: `User ${user.username} deleted` });
+//           }
+//         });  
+//       }
+//     });
+    
+//   } catch (err) {
+//     res.status(500).send({ success: false, msg: err });
+//   }
+// };
 
 exports.getUserData = async function getUserData(req, res, next) {
   try {
