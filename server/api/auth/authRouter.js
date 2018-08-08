@@ -1,10 +1,10 @@
 const express = require('express');
 const auth = require('./authController');
-const authMiddelware = require('../../middleware/authMiddelware/authMiddelware');
+const verifyToken = require('../../middleware/authMiddelware/authMiddelware');
 
 const authRoutes = express.Router();
 
-//  routes
+// routes
 authRoutes.route('/signup')
   .post(auth.addUser);
 
@@ -14,11 +14,12 @@ authRoutes.route('/login')
 authRoutes.route('/forgotpassword')
   .post(auth.newPassword);
 
-authRoutes.use(authMiddelware);
 
 authRoutes.route('/me')
+  .all(verifyToken)
   .delete(auth.deleteUser)
-  .get(auth.getUser);
+  .get(auth.getUserData)
+  .patch(auth.patchUser);
 
 
 module.exports = authRoutes;

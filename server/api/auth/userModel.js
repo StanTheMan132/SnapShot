@@ -38,16 +38,22 @@ UserSchema.pre('save', function saveSchema(next) {
   return true;
 });
 
+
 //  compare the user password to the hashed password
-UserSchema.methods.comparePasswords = function compare(passw, cb) {
-  bcrypt.compare(passw, this.password, (err, isMatch) => {
-    if (err) {
-      return cb(err);
-    }
-    cb(null, isMatch);
-    return true;
-  });
+
+UserSchema.methods = {
+  authenticate: async function authenticateUser(passw) {
+    const authenticated = await new Promise((resolve, reject) => {
+      bcrypt.compare(passw, this.password, (err, isMatch) => {
+        if (err) reject(err);
+        resolve(isMatch);
+      });
+    });
+    console.log(authenticated);
+    return authenticated;
+  },
 };
+
 
 //  export the UserSchema so it can be used in different files
 module.exports = mongoose.model('User', UserSchema);

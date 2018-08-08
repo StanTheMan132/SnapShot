@@ -19,3 +19,4 @@ module.exports = function verifyToken(req, res, next) {
     res.status(403).send({ success: false, msg: 'No token found' });
   }
 };
+
