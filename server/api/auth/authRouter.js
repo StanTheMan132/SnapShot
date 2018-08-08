@@ -1,6 +1,6 @@
 const express = require('express');
 const auth = require('./authController');
-const verifyToken = require('../../middleware/authMiddelware/authMiddelware');
+const verifyToken = require('../../middleware/authMiddelware/verifyToken');
 
 const authRoutes = express.Router();
 
@@ -16,7 +16,7 @@ authRoutes.route('/forgotpassword')
 
 
 authRoutes.route('/me')
-  .all(verifyToken)
+  .all(verifyToken())
   .delete(auth.deleteUser)
   .get(auth.getUserData)
   .patch(auth.patchUser);

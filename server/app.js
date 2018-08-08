@@ -1,6 +1,7 @@
 const express = require('express');
 const setupMiddleware = require('./middleware/appMiddleware');
 const startDatabase = require('./database');
+const seedDatabase = require('./utils/seedDatabase');
 const errorHandler = require('./utils/errorHandler');
 const api = require('./api/api');
 
@@ -11,9 +12,13 @@ setupMiddleware(app);
 //  starts the database
 startDatabase();
 
+if (process.env.NODE_ENV !== 'prod') {
+  seedDatabase();
+}
 //  Routes
 app.use('/api', api);
 
+//  if no route is hit
 app.use((req, res, next) => {
   res.status(404).json({
     status: 404,

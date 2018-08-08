@@ -22,23 +22,25 @@ exports.addUser = async function addUser(req, res) {
   }
 };
 
-exports.authUser = async function authUser(req, res) {
+exports.authUser = async function authUser(req, res, next) {
   try {
-    console.log('hello comrad');
+    //  if user doesnt exist, wont do the correct thing
+    //  will just throw an error because "undefined" does not have the method "authenticae"
+    //  TODO: return proper status code and message about unsuccessful login due to unexisting user
     const foundUser = await User.findOne({ username: req.body.username });
+    //  TODO: return proper status code and message about unsuccessfull login due to unmatching password
     const matching = await foundUser.authenticate(req.body.password);
-    console.log(matching);
     if (matching) {
       const payload = {
         id: foundUser._id,
       };
       const token = jwt.sign(payload, config.jwt.secret, {
-        expiresIn: 30 * 60,
+        expiresIn: config.jwt.expires,
       });
-      res.json({ success: true, token: token });
+      res.status(200).json({ success: true, token });
     }
   } catch (err) {
-    res.status(500).send({ success: false, msg: err });
+    next(err);
   }
 };
 

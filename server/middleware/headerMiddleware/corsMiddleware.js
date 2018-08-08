@@ -1,4 +1,4 @@
-function corsMiddleware(){
+function corsMiddleware() {
   return (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*'); //  change * to domain name if neccesary
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
