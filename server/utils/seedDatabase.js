@@ -6,7 +6,7 @@ const users = [];
 for (let i = 0; i < 20; i += 1) {
   //  change these to whatever you want
   const newUser = {
-    username: `${faker.random.word}${faker.name.findName()}`,
+    username: `${faker.name.findName()}`,
     email: faker.internet.email(),
     password: 'test',
     permissions: faker.random.arrayElement(['create', 'read', 'update']),
