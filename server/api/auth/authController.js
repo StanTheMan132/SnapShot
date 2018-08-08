@@ -23,24 +23,30 @@ exports.addUser = async function addUser(req, res) {
 };
 
 exports.authUser = async function authUser(req, res, next) {
-  try {
-    //  if user doesnt exist, wont do the correct thing
-    //  will just throw an error because "undefined" does not have the method "authenticae"
-    //  TODO: return proper status code and message about unsuccessful login due to unexisting user
-    const foundUser = await User.findOne({ username: req.body.username });
-    //  TODO: return proper status code and message about unsuccessfull login due to unmatching password
-    const matching = await foundUser.authenticate(req.body.password);
-    if (matching) {
-      const payload = {
-        id: foundUser._id,
-      };
-      const token = jwt.sign(payload, config.jwt.secret, {
-        expiresIn: config.jwt.expires,
-      });
-      res.status(200).json({ success: true, token });
+  if (!req.body.username || !req.body.password) {
+    res.json({ success: false, msg: 'No username/password found' });
+  } else {
+    try {
+      const foundUser = await User.findOne({ username: req.body.username });
+      if (!foundUser) {
+        res.status(401).json({ success: false, msg: 'User not found' });
+        return;
+      }
+      const matching = await foundUser.authenticate(req.body.password);
+      if (matching) {
+        const payload = {
+          id: foundUser._id,
+        };
+        const token = jwt.sign(payload, config.jwt.secret, {
+          expiresIn: config.jwt.expires,
+        });
+        res.status(200).json({ success: true, token });
+      } else {
+        res.status(401).json({ succes: false, msg: 'Failed to authenticate password' });
+      }
+    } catch (err) {
+      next(err);
     }
-  } catch (err) {
-    next(err);
   }
 };
 

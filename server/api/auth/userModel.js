@@ -42,15 +42,17 @@ UserSchema.pre('save', function saveSchema(next) {
 //  compare the user password to the hashed password
 
 UserSchema.methods = {
-  authenticate: async function authenticateUser(passw) {
-    const authenticated = await new Promise((resolve, reject) => {
-      bcrypt.compare(passw, this.password, (err, isMatch) => {
-        if (err) reject(err);
-        resolve(isMatch);
-      });
-    });
-    console.log(authenticated);
-    return authenticated;
+  authenticate: async function authenticateUser(passw, next) {
+    try {
+      const authenticated = await bcrypt.compare(passw, this.password);
+      // console.log(authenticated);
+      if (authenticated) {
+        return true;
+      }
+      return false;
+    } catch (err) {
+      next(err);
+    }
   },
 };
 
