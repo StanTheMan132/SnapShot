@@ -68,7 +68,7 @@ exports.deleteUser = async function deleteUser(req, res) {
     const foundUser = await User.findOne({ username: req.body.username });
     const matchingPasswords = await foundUser.authenticate(req.body.password);
     if (matchingPasswords) {
-      await User.findByIdAndRemove(foundUser._id);
+      await User.findOneAndRemove({ _id: foundUser._id });
       res.json({ success: true, msg: `User ${foundUser.username} deleted` })
     }
   } catch (err) {
@@ -79,7 +79,7 @@ exports.deleteUser = async function deleteUser(req, res) {
 
 exports.getUserData = async function getUserData(req, res, next) {
   try {
-    const foundUser = await User.findById(req.user.id);
+    const foundUser = await User.findOne({ _id: req.user.id });
     if (foundUser) {
       res.status(200).json({ succes: true, username: foundUser.username, email: foundUser.email });
     } else {
