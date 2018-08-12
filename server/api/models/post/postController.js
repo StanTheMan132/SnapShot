@@ -1,8 +1,11 @@
 const Post = require('./postModel');
 const User = require('../../auth/userModel');
 
-exports.createNewPost = async function createNewPost(req, res) {
+exports.createNewPost = async function createNewPost(req, res, next) {
   try {
+    if (!req.body.imgUrl) {
+      res.status(400).json({ msg: 'No img found, please add a img' });
+    }
     const newDate = new Date();
     const user = await User.findOne({ _id: req.user.id });
     const newPost = new Post({
@@ -11,13 +14,13 @@ exports.createNewPost = async function createNewPost(req, res) {
       date: newDate,
     });
     newPost.save();
-    res.status(204).send();
-  } catch (err) {
-    res.status(500).send({ msg: err });
+    res.status(201).json(newPost);
+  } catch (error) {
+    next(error);
   }
 };
 
-exports.getLatestPost = async function getLatestPost(req, res) {
+exports.getLatestPost = async function getLatestPost(req, res, next) {
   try {
     let latestPost = [];
     const { lastPostDate } = req.query;
@@ -26,8 +29,8 @@ exports.getLatestPost = async function getLatestPost(req, res) {
     } else {
       latestPost = await Post.find().sort('-date').limit(11);
     }
-    res.status(200).send({ posts: latestPost });
+    res.status(200).send(latestPost);
   } catch (err) {
-    res.status(500).send({ msg: err });
+    next(err);
   }
 };
