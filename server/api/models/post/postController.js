@@ -42,10 +42,17 @@ exports.deletePost = async function deletePost(req, res, next) {
     if (!req.body.postId) {
       res.status(400).json({ msg: 'No post found' });
     }
-    await commentController.deleteComments(req.body.postId);
-    await Post.findOneAndRemove({ _id: req.body.postId });
-    res.status(204).send();
+    const post = await Post.findOne({ _id: req.body.postId });
+    const user = await User.findOne({ username: post.username });
+    console.log(`${user._id} is = to ${req.user.id}`);
+    if (user._id != req.user.id) {
+      res.status(401).json({ msg: 'Unauthorized' });
+    } else {
+      await commentController.deleteComments(req.body.postId);
+      await Post.findOneAndRemove({ _id: req.body.postId });
+      res.status(204).send();
+    }
   } catch (err) {
     next(err);
   }
-}
+};
