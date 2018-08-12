@@ -54,6 +54,13 @@ UserSchema.methods = {
       next(err);
     }
   },
+  removePassword: function removePassword() {
+    const obj = this.toObject();
+    delete obj.password;
+    delete obj._id;
+    return obj;
+
+  }
 };
 
 

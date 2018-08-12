@@ -81,7 +81,7 @@ exports.getUserData = async function getUserData(req, res, next) {
   try {
     const foundUser = await User.findOne({ _id: req.user.id });
     if (foundUser) {
-      res.status(200).json({ succes: true, username: foundUser.username, email: foundUser.email });
+      res.status(200).json({ succes: true, username: foundUser.removePassword() });
     } else {
       res.status(204).json({});
     }
