@@ -1,5 +1,7 @@
 const Post = require('./postModel');
 const User = require('../../auth/userModel');
+const Comment = require('../comment/commentModel');
+const commentController = require('../comment/commentController');
 
 exports.createNewPost = async function createNewPost(req, res, next) {
   try {
@@ -34,3 +36,16 @@ exports.getLatestPost = async function getLatestPost(req, res, next) {
     next(err);
   }
 };
+
+exports.deletePost = async function deletePost(req, res, next) {
+  try {
+    if (!req.body.postId) {
+      res.status(400).json({ msg: 'No post found' });
+    }
+    await commentController.deleteComments(req.body.postId);
+    await Post.findOneAndRemove({ _id: req.body.postId });
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+}

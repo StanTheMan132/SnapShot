@@ -56,3 +56,13 @@ exports.getComments = async function getComments(req, res, next) {
     next(err);
   }
 };
+
+exports.deleteComments = async function deleteComments(postId, next) {
+  try {
+    await Comment.remove({ parentPostId: postId });
+    return true;
+  } catch (err) {
+    next(err);
+    return false;
+  }
+}

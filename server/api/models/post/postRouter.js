@@ -13,4 +13,7 @@ postRoutes.route('/newpost')
 postRoutes.route('/getpost')
   .get(post.getLatestPost);
 
+postRoutes.route('/deletepost')
+  .delete(post.deletePost);
+
 module.exports = postRoutes;
