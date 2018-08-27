@@ -1,9 +1,9 @@
+const sinon = require('sinon');
 const jwt = require('jsonwebtoken');
 const User = require('./userModel');
 const config = require('../../config/config');
-const Post = require('../models/post/postModel');
 
-exports.authenticateUser = async function authenticateUser(username, password) {
+exports.authenticateUser = async function authenticateUser(username, password, testing) {
   try {
     const foundUser = await User.findOne({ username });
     if (!foundUser) {
@@ -26,7 +26,6 @@ exports.authenticateUser = async function authenticateUser(username, password) {
     }
     return 'Failed to authenticate password';
   } catch (err) {
-    console.log(err);
     return err;
   }
 };

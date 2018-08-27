@@ -45,7 +45,6 @@ UserSchema.pre('save', function saveSchema(next) {
 
 UserSchema.methods = {
   authenticate: async function authenticateUser(passw, next) {
-    console.log('doing stuff')
     try {
       const authenticated = await bcrypt.compare(passw, this.password);
       // console.log(authenticated);
