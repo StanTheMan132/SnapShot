@@ -1,12 +1,11 @@
 const jwt = require('jsonwebtoken');
 const User = require('./userModel');
 const config = require('../../config/config');
+const Post = require('../models/post/postModel');
 
 exports.authenticateUser = async function authenticateUser(username, password) {
   try {
-    console.log('working');
     const foundUser = await User.findOne({ username });
-    console.log('test');
     if (!foundUser) {
       return 'User not Found';
     }
@@ -27,6 +26,7 @@ exports.authenticateUser = async function authenticateUser(username, password) {
     }
     return 'Failed to authenticate password';
   } catch (err) {
+    console.log(err);
     return err;
   }
 };

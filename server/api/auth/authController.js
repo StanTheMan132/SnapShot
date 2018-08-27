@@ -3,7 +3,6 @@ const User = require('./userModel');
 const config = require('../../config/config');
 const authFunctions = require('./authFunctions');
 
-
 exports.addUser = async function addUser(req, res) {
   if (!req.body.username || !req.body.password) {
     res.json({ success: false, msg: 'No name/password found' });
