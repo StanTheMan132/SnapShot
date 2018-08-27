@@ -26,6 +26,7 @@ exports.authUser = async function authUser(req, res, next) {
   if (!req.body.username || !req.body.password) {
     res.json({ success: false, msg: 'No username/password found' });
   } else {
+    console.log(req);
     try {
       const foundUser = await User.findOne({ username: req.body.username });
       if (!foundUser) {
