@@ -7,17 +7,11 @@ exports.addUser = async function addUser(req, res) {
   if (!req.body.username || !req.body.password) {
     res.json({ success: false, msg: 'No name/password found' });
   } else {
-    const newUser = new User({
-      username: req.body.username,
-      password: req.body.password,
-      email: req.body.email,
-      permissions: 'read',
-    });
-    try {
-      await newUser.save();
-      res.status(201).json({ success: true, msg: 'Created New User' });
-    } catch (err) {
-      res.json({ success: false, msg: `Something goofed: ${err}` });
+    const result = await authFunctions.newUser(req.body.username, req.body.password, req.body.email, User);
+    if (result.success) {
+      res.status(200).json(result);
+    } else {
+      res.status(500).json({ msg: 'error' });
     }
   }
 };
@@ -26,7 +20,7 @@ exports.authUser = async function authUser(req, res, next) {
   if (!req.body.username || !req.body.password) {
     res.json({ success: false, msg: 'No username/password found' });
   } else {
-    const output = await authFunctions.authenticateUser(req.body.username, req.body.password);
+    const output = await authFunctions.authenticateUser(req.body.username, req.body.password, User);
     res.json(output);
   }
 };

@@ -1,7 +1,6 @@
 const Post = require('./postModel');
 const User = require('../../auth/userModel');
-const Comment = require('../comment/commentModel');
-const commentController = require('../comment/commentController');
+const postFunctions = require('./postFunctions');
 
 exports.createNewPost = async function createNewPost(req, res, next) {
   try {
@@ -9,6 +8,7 @@ exports.createNewPost = async function createNewPost(req, res, next) {
       res.status(400).json({ msg: 'No img found, please add a img' });
     }
     const newDate = new Date();
+    console.log(req.user.id);
     const user = await User.findOne({ _id: req.user.id });
     const newPost = new Post({
       username: user.username,
@@ -44,13 +44,13 @@ exports.deletePost = async function deletePost(req, res, next) {
     }
     const post = await Post.findOne({ _id: req.body.postId });
     const user = await User.findOne({ username: post.username });
-    console.log(`${user._id} is = to ${req.user.id}`);
     if (user._id != req.user.id) {
       res.status(401).json({ msg: 'Unauthorized' });
     } else {
-      await commentController.deleteComments(req.body.postId);
-      await Post.findOneAndRemove({ _id: req.body.postId });
-      res.status(204).send();
+      const done = await postFunctions.deletePostandComments(req.body.postId);
+      res.send(done);
+      
+      
     }
   } catch (err) {
     next(err);

@@ -42,7 +42,6 @@ UserSchema.pre('save', function saveSchema(next) {
 
 
 //  compare the user password to the hashed password
-
 UserSchema.methods = {
   authenticate: async function authenticateUser(passw, next) {
     try {
@@ -53,7 +52,7 @@ UserSchema.methods = {
       }
       return false;
     } catch (err) {
-      next(err);
+      return false;
     }
   },
   removePassword: function removePassword() {

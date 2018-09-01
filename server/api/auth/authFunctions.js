@@ -1,9 +1,7 @@
-const sinon = require('sinon');
 const jwt = require('jsonwebtoken');
-const User = require('./userModel');
 const config = require('../../config/config');
 
-exports.authenticateUser = async function authenticateUser(username, password, testing) {
+exports.authenticateUser = async function authenticateUser(username, password, User) {
   try {
     const foundUser = await User.findOne({ username });
     if (!foundUser) {
@@ -29,3 +27,18 @@ exports.authenticateUser = async function authenticateUser(username, password, t
     return err;
   }
 };
+
+exports.newUser = async function newUser(username, password, email, User) {
+  const newUserObject = new User({
+    username,
+    password,
+    email,
+    permissions: 'read',
+  });
+  try {
+    await newUserObject.save();
+    return { success: true, msg: 'Created New User' };
+  } catch (err) {
+    return { success: false, msg: `Something goofed: ${err}` };
+  }
+}
