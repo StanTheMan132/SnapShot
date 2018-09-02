@@ -1,5 +1,5 @@
 const Post = require('./postModel');
-const User = require('../../auth/userModel');
+const User = require('../auth/userModel');
 const postFunctions = require('./postFunctions');
 
 exports.createNewPost = async function createNewPost(req, res, next) {

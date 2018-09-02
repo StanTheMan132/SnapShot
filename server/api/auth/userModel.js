@@ -1,3 +1,19 @@
+/*
+  This is the mongoose model for a User.
+
+  It includes a
+    1. username
+    2. password
+    3. email
+    4. authority
+
+  This model can be used to create a new User or find a User by using the
+    .findOne()
+    .save()
+  functions
+  Note that .save will automatically hash the included password
+*/
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -5,14 +21,12 @@ mongoose.Promise = Promise;
 
 const { Schema } = mongoose;
 
-// https://blog.matoski.com/article/jwt-express-node-mongoose
-
 //  Mongoose Schema
 const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true },
-  permissions: { type: String, required: true },
+  authority: { type: String, required: true },
 });
 
 //  hash and salt the password before saving

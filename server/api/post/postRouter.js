@@ -1,11 +1,13 @@
 const express = require('express');
 const post = require('./postController');
-const verifyToken = require('../../../middleware/authMiddelware/verifyToken');
+const verifyToken = require('../../middleware/authMiddelware/verifyToken');
 
 const postRoutes = express.Router();
 
-// routes
+// use the authentication middelware on all routes
 postRoutes.use(verifyToken());
+
+// routes
 
 postRoutes.route('/newpost')
   .post(post.createNewPost);

@@ -1,5 +1,5 @@
 const Comment = require('./commentModel');
-const User = require('../../auth/userModel');
+const User = require('../auth/userModel');
 
 exports.createNewComment = async function createNewComment(req, res, next) {
   try {
