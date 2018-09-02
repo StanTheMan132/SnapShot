@@ -20,7 +20,7 @@ const test = {
   app: {
     port: process.env.TEST_PORT || 3000,
   },
-  Jwt: {
+  jwt: {
     secret: process.env.TEST_JWT_SECRET || 'SuperSecret',
     expires: process.env.TEST_JWT_EXPIRES || '1h',
   },

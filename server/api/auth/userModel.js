@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
+mongoose.Promise = Promise;
+
 const { Schema } = mongoose;
 
 // https://blog.matoski.com/article/jwt-express-node-mongoose
@@ -40,7 +42,6 @@ UserSchema.pre('save', function saveSchema(next) {
 
 
 //  compare the user password to the hashed password
-
 UserSchema.methods = {
   authenticate: async function authenticateUser(passw, next) {
     try {
@@ -51,7 +52,7 @@ UserSchema.methods = {
       }
       return false;
     } catch (err) {
-      next(err);
+      return false;
     }
   },
   removePassword: function removePassword() {
