@@ -24,7 +24,7 @@ module.exports = async function seedDatabase() {
         username: 'test',
         password: 'test',
         email: faker.internet.email(),
-        //  unsure what you want in permissions field for now
+        //  unsure what you want in the authority field for now
         authority: faker.random.arrayElement(['create', 'read', 'update']),
       })];
 

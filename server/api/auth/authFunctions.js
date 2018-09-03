@@ -33,7 +33,7 @@ exports.newUser = async function newUser(username, password, email, User) {
     username,
     password,
     email,
-    permissions: 'read',
+    authority: 'read',
   });
   try {
     await newUserObject.save();
