@@ -1,3 +1,8 @@
+/*
+  This is the router for the /api route
+  All rotues should go through here.
+*/
+
 const express = require('express');
 const authRoutes = require('./auth/authRouter');
 const postRoutes = require('./post/postRouter');

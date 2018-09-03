@@ -1,6 +1,6 @@
 const express = require('express');
 const comment = require('./commentController');
-const verifyToken = require('../../../middleware/authMiddelware/verifyToken');
+const verifyToken = require('../../middleware/authMiddelware/verifyToken');
 
 const commentRoutes = express.Router();
 

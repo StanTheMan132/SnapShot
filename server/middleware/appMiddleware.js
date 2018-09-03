@@ -5,7 +5,7 @@ const getCurrentDatetime = require('../utils/getCurrentDatetime');
 
 module.exports = function setupMiddleware(app) {
   //  disable x-powered-by for security reasons
-  app.disable('x-powered-by');
+ // app.disable('x-powered-by');
   //  middleware to allow cross-origin resource sharing
   app.use(corsMiddleware());
   app.use(bodyParser.urlencoded({ extended: false }));
