@@ -1,12 +1,12 @@
-const commentController = require('../comment/commentController');
-const Post = require('./postModel');
 
-exports.deletePostandComments = async function deletePostandComments(postId) {
+exports.deletePostandComments = async function deletePostandComments(postId, Post, commentController) {
   try {
-    console.log(postId);
-    await Post.findOneAndRemove({ _id: postId });
-    await commentController.deleteComments(postId);
-    return true;
+    const deleteComments = await commentController.deleteComments(postId);
+    const deletePost = await Post.findOneAndRemove({ _id: postId });
+    if (deleteComments && deletePost) {
+      return true;
+    }
+    return false;
   } catch (err) {
     return err;
   }

@@ -1,6 +1,7 @@
 const Post = require('./postModel');
 const User = require('../auth/userModel');
 const postFunctions = require('./postFunctions');
+const commentController = require('../comment/commentController');
 
 exports.createNewPost = async function createNewPost(req, res, next) {
   try {
@@ -47,7 +48,7 @@ exports.deletePost = async function deletePost(req, res, next) {
     if (user._id != req.user.id) {
       res.status(401).json({ msg: 'Unauthorized' });
     } else {
-      const done = await postFunctions.deletePostandComments(req.body.postId);
+      const done = await postFunctions.deletePostandComments(req.body.postId, Post, commentController);
       res.send(done);
       
       
