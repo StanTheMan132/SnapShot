@@ -1,14 +1,15 @@
 const Post = require('./postModel');
 const User = require('../auth/userModel');
 const postFunctions = require('./postFunctions');
-const commentController = require('../comment/commentController');
+const commentFunctions = require('../comment/commentFunctions');
+
 
 exports.createNewPost = async function createNewPost(req, res, next) {
   try {
     if (!req.body.imgUrl) {
       res.status(400).json({ msg: 'No img found, please add a img' });
     }
-    const newPost = await postFunctions.newPost(req.body.imgUrl, req.user.id, Post);
+    const newPost = await postFunctions.newPost(req.body.imgUrl, req.user.id, Post, User);
     if (newPost.succes) {
       res.status(201).json(newPost);
     } else {
@@ -33,13 +34,8 @@ exports.deletePost = async function deletePost(req, res, next) {
   try {
     if (!req.body.postId) {
       res.status(400).json({ msg: 'No post found' });
-    }
-    const post = await Post.findOne({ _id: req.body.postId });
-    const user = await User.findOne({ username: post.username });
-    if (user._id != req.user.id) {
-      res.status(401).json({ msg: 'Unauthorized' });
     } else {
-      const done = await postFunctions.deletePostandComments(req.body.postId, Post, commentController);
+      const done = await postFunctions.deletePostandComments(req.body.postId, req.user.id, Post, commentFunctions, User);
       res.send(done);
     }
   } catch (err) {

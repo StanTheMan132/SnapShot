@@ -1,5 +1,5 @@
-/*
-  This is the mongoose model for a User.
+/**
+ * This is the mongoose model for a User.
 
   It includes a
     1. username
@@ -12,8 +12,7 @@
     .save()
   functions
   Note that .save will automatically hash the included password
-*/
-
+ */
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 

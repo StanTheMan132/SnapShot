@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "watch": "jest --watch",
+    "coverage": "jest --coverage",
     "start": "nodemon ./server.js",
     "build-react": "webpack --mode development",
     "start-react": "webpack-dev-server --mode development --open --port 8000"

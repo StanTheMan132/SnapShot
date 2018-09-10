@@ -12,9 +12,9 @@ setupMiddleware(app);
 //  starts the database
 startDatabase();
 
-if (process.env.NODE_ENV !== 'prod') {
-  seedDatabase();
-}
+// if (process.env.NODE_ENV !== 'prod') {
+//   seedDatabase();
+// }
 //  Routes
 app.use('/api', api);
 
